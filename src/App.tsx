@@ -19,7 +19,13 @@ function App() {
      
     if(start){
       const interval = setInterval(()=>{
-        setContador(prev => prev - 1)
+        if(contador <= 0){
+          
+          setContador(0)
+          setStart(false)
+        }
+        else
+          setContador(prev => prev - 1)
       }, 1000)
 
       return ()=> clearInterval(interval)
@@ -31,7 +37,7 @@ function App() {
     {
       id: 0,
       type: "Pomodoro",
-      tempo:1500
+      tempo:3
     },
     {
       id: 1,
@@ -54,6 +60,7 @@ function App() {
   function handleConfigureSeconds()
   {
     if((contador % 60) <= 9){
+
       return "0" + contador % 60
     }
 
@@ -63,6 +70,7 @@ function App() {
   function handleConfigureMinutes()
   {
     if(Math.floor(contador / 60 ) <= 9){
+
       return "0" + Math.floor(contador / 60 )
     }
     return Math.floor(contador / 60 );
@@ -70,8 +78,25 @@ function App() {
 
   function handleSetStart()
   {
+    if(contador <= 0){
+      setContador(timerType[tempoSelecionado].tempo)
+      return
+    }
     const running = !start
     setStart(running)
+  }
+
+  function handleChangeTextButton(){
+
+    if(contador <= 0){
+      return "REINICIAR"
+    }
+    else if(start){
+      return "STOP"
+    }
+    else if(!start){
+      return "START"
+    }
   }
 
   return (
@@ -98,7 +123,7 @@ function App() {
 
         <button 
         onClick={handleSetStart}
-        className="btn-start">{start? "STOP" : "START"}</button>
+        className="btn-start">{handleChangeTextButton()}</button>
 
       </div>
 
