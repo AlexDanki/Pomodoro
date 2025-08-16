@@ -16,9 +16,9 @@ function App() {
           <button className='btn-time'>Long Break</button>
         </section>
 
-        <h1>00:00</h1>
+        <h1 className="timer">00:00</h1>
 
-        <button className="btn-pause">Start</button>
+        <button className="btn-start">START</button>
 
       </div>
 
