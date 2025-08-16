@@ -3,15 +3,34 @@ import './App.css'
 
 function App() {
   const [tempoSelecionado, setTempoSelecionado] = useState(0)
-  const [contador, setContador] = useState(610);
-  const [ curTime, setCurTime ] = useState(1500);
+  const [contador, setContador] = useState(0);
+  const [start, setStart] = useState(false)
+
+  let iniciou = false;
 
   useEffect(()=>{
-    const interval = setInterval(()=>{
-      setContador(prev => prev - 1)
-    }, 1000)
+    if(!iniciou){
+      setContador(timerType[tempoSelecionado].tempo)
+      iniciou = true
+    }
+  },[])
 
-    return ()=> clearInterval(interval)
+  useEffect(()=>{
+     
+    if(start){
+      const interval = setInterval(()=>{
+        if(contador <= 0){
+          
+          setContador(0)
+          setStart(false)
+        }
+        else
+          setContador(prev => prev - 1)
+      }, 1000)
+
+      return ()=> clearInterval(interval)
+    }
+
   })
 
   const timerType = [
@@ -33,12 +52,15 @@ function App() {
   ]
 
   function handleSwapTimerType(index: number){
-    setTempoSelecionado(index)    
+    setTempoSelecionado(index)
+    setStart(false)
+    setContador(timerType[index].tempo)  
   }
 
   function handleConfigureSeconds()
   {
     if((contador % 60) <= 9){
+
       return "0" + contador % 60
     }
 
@@ -48,9 +70,33 @@ function App() {
   function handleConfigureMinutes()
   {
     if(Math.floor(contador / 60 ) <= 9){
+
       return "0" + Math.floor(contador / 60 )
     }
     return Math.floor(contador / 60 );
+  }
+
+  function handleSetStart()
+  {
+    if(contador <= 0){
+      setContador(timerType[tempoSelecionado].tempo)
+      return
+    }
+    const running = !start
+    setStart(running)
+  }
+
+  function handleChangeTextButton(){
+
+    if(contador <= 0){
+      return "REINICIAR"
+    }
+    else if(start){
+      return "STOP"
+    }
+    else if(!start){
+      return "START"
+    }
   }
 
   return (
@@ -75,7 +121,9 @@ function App() {
         
         <h1 className="timer">{handleConfigureMinutes()}:{handleConfigureSeconds()}</h1>
 
-        <button className="btn-start">START</button>
+        <button 
+        onClick={handleSetStart}
+        className="btn-start">{handleChangeTextButton()}</button>
 
       </div>
 
