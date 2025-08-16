@@ -1,8 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
   const [tempoSelecionado, setTempoSelecionado] = useState(0)
+  const [contador, setContador] = useState(610);
+  const [ curTime, setCurTime ] = useState(1500);
+
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      setContador(prev => prev - 1)
+    }, 1000)
+
+    return ()=> clearInterval(interval)
+  })
 
   const timerType = [
     {
@@ -22,6 +32,27 @@ function App() {
     }
   ]
 
+  function handleSwapTimerType(index: number){
+    setTempoSelecionado(index)    
+  }
+
+  function handleConfigureSeconds()
+  {
+    if((contador % 60) <= 9){
+      return "0" + contador % 60
+    }
+
+    return contador % 60;
+  }
+
+  function handleConfigureMinutes()
+  {
+    if(Math.floor(contador / 60 ) <= 9){
+      return "0" + Math.floor(contador / 60 )
+    }
+    return Math.floor(contador / 60 );
+  }
+
   return (
 
     <div className="container">
@@ -32,15 +63,17 @@ function App() {
           
           {
             timerType.map((item, index)=>(
-              <button 
+              <button
+              key={index}
+              onClick={()=>handleSwapTimerType(index)} 
               style={{backgroundColor: item.id == tempoSelecionado? "#0D0D0D" : "#262626"}}
               className='btn-time'>{item.type}</button>
             ))
           }
           
         </section>
-
-        <h1 className="timer">00:00</h1>
+        
+        <h1 className="timer">{handleConfigureMinutes()}:{handleConfigureSeconds()}</h1>
 
         <button className="btn-start">START</button>
 
