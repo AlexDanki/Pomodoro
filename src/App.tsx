@@ -37,7 +37,7 @@ function App() {
     {
       id: 0,
       type: "Pomodoro",
-      tempo:3
+      tempo:1500
     },
     {
       id: 1,
