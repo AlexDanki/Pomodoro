@@ -4,14 +4,18 @@ import './App.css'
 function App() {
   const [tempoSelecionado, setTempoSelecionado] = useState(0)
   const [contador, setContador] = useState(610);
-  const [ curTime, setCurTime ] = useState(1500);
+  const [start, setStart] = useState(false)
 
   useEffect(()=>{
-    const interval = setInterval(()=>{
-      setContador(prev => prev - 1)
-    }, 1000)
 
-    return ()=> clearInterval(interval)
+    if(start){
+      const interval = setInterval(()=>{
+        setContador(prev => prev - 1)
+      }, 1000)
+
+      return ()=> clearInterval(interval)
+    }
+
   })
 
   const timerType = [
@@ -33,7 +37,9 @@ function App() {
   ]
 
   function handleSwapTimerType(index: number){
-    setTempoSelecionado(index)    
+    setTempoSelecionado(index)
+    setStart(false)
+    setContador(timerType[index].tempo)  
   }
 
   function handleConfigureSeconds()
@@ -51,6 +57,12 @@ function App() {
       return "0" + Math.floor(contador / 60 )
     }
     return Math.floor(contador / 60 );
+  }
+
+  function handleSetStart()
+  {
+    const running = !start
+    setStart(running)
   }
 
   return (
@@ -75,7 +87,9 @@ function App() {
         
         <h1 className="timer">{handleConfigureMinutes()}:{handleConfigureSeconds()}</h1>
 
-        <button className="btn-start">START</button>
+        <button 
+        onClick={handleSetStart}
+        className="btn-start">{start? "STOP" : "START"}</button>
 
       </div>
 
