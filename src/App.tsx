@@ -2,7 +2,25 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tempoSelecionado, setTempoSelecionado] = useState(0)
+
+  const timerType = [
+    {
+      id: 0,
+      type: "Pomodoro",
+      tempo:1500
+    },
+    {
+      id: 1,
+      type: "Short Break",
+      tempo:300
+    },
+    {
+      id: 2,
+      type: "Long Break",
+      tempo:900
+    }
+  ]
 
   return (
 
@@ -11,9 +29,15 @@ function App() {
       <div className='card'>
 
         <section className="buttons-timer">
-          <button className='btn-time'>Pomodoro</button>
-          <button className='btn-time'>Short Break</button>
-          <button className='btn-time'>Long Break</button>
+          
+          {
+            timerType.map((item, index)=>(
+              <button 
+              style={{backgroundColor: item.id == tempoSelecionado? "#0D0D0D" : "#262626"}}
+              className='btn-time'>{item.type}</button>
+            ))
+          }
+          
         </section>
 
         <h1 className="timer">00:00</h1>
