@@ -1,34 +1,86 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tempoSelecionado, setTempoSelecionado] = useState(0)
+  const [contador, setContador] = useState(610);
+  const [ curTime, setCurTime ] = useState(1500);
+
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      setContador(prev => prev - 1)
+    }, 1000)
+
+    return ()=> clearInterval(interval)
+  })
+
+  const timerType = [
+    {
+      id: 0,
+      type: "Pomodoro",
+      tempo:1500
+    },
+    {
+      id: 1,
+      type: "Short Break",
+      tempo:300
+    },
+    {
+      id: 2,
+      type: "Long Break",
+      tempo:900
+    }
+  ]
+
+  function handleSwapTimerType(index: number){
+    setTempoSelecionado(index)    
+  }
+
+  function handleConfigureSeconds()
+  {
+    if((contador % 60) <= 9){
+      return "0" + contador % 60
+    }
+
+    return contador % 60;
+  }
+
+  function handleConfigureMinutes()
+  {
+    if(Math.floor(contador / 60 ) <= 9){
+      return "0" + Math.floor(contador / 60 )
+    }
+    return Math.floor(contador / 60 );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+
+    <div className="container">
+
+      <div className='card'>
+
+        <section className="buttons-timer">
+          
+          {
+            timerType.map((item, index)=>(
+              <button
+              key={index}
+              onClick={()=>handleSwapTimerType(index)} 
+              style={{backgroundColor: item.id == tempoSelecionado? "#0D0D0D" : "#262626"}}
+              className='btn-time'>{item.type}</button>
+            ))
+          }
+          
+        </section>
+        
+        <h1 className="timer">{handleConfigureMinutes()}:{handleConfigureSeconds()}</h1>
+
+        <button className="btn-start">START</button>
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+    </div>
+
   )
 }
 
