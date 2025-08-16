@@ -3,11 +3,20 @@ import './App.css'
 
 function App() {
   const [tempoSelecionado, setTempoSelecionado] = useState(0)
-  const [contador, setContador] = useState(610);
+  const [contador, setContador] = useState(0);
   const [start, setStart] = useState(false)
 
-  useEffect(()=>{
+  let iniciou = false;
 
+  useEffect(()=>{
+    if(!iniciou){
+      setContador(timerType[tempoSelecionado].tempo)
+      iniciou = true
+    }
+  },[])
+
+  useEffect(()=>{
+     
     if(start){
       const interval = setInterval(()=>{
         setContador(prev => prev - 1)
